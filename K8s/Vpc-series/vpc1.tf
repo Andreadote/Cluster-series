@@ -23,7 +23,7 @@ resource "aws_internet_gateway" "igw" {
 
 #3 Create EIP for NAT Gateway
 resource "aws_eip" "nat" {
-  vpc =  true
+  vpc   = true
   count = length(var.public_cidr)
 
   tags = {
@@ -36,7 +36,7 @@ resource "aws_eip" "nat" {
 # 4 Create NAT Gateway
 resource "aws_nat_gateway" "nat" {
   count         = length(var.public_cidr)
-  allocation_id = aws_eip.nat[count.index].id  # Use the EIP allocation ID corresponding to this NAT Gateway
+  allocation_id = aws_eip.nat[count.index].id # Use the EIP allocation ID corresponding to this NAT Gateway
   subnet_id     = aws_subnet.public[count.index].id
 
   tags = {
@@ -111,18 +111,18 @@ resource "aws_route" "public_internet_gateway" {
 }
 ## 10 Create private route using NAT Gateway
 #resource "aws_route" "private_nat_gateway" {
-  #count = length(var.private_cidr)
+#count = length(var.private_cidr)
 
 #route_table_id         = aws_route_table.private.id
-  #destination_cidr_block = "0.0.0.0/0"
-  #gateway_id             = aws_nat_gateway.nat[count.index].id  # Use aws_nat_gateway instead of aws_internet_gateway
+#destination_cidr_block = "0.0.0.0/0"
+#gateway_id             = aws_nat_gateway.nat[count.index].id  # Use aws_nat_gateway instead of aws_internet_gateway
 
-  # Only create the route if it doesn't already exist
-  #lifecycle {
-    #ignore_changes = [destination_cidr_block, gateway_id]
-  #}
+# Only create the route if it doesn't already exist
+#lifecycle {
+#ignore_changes = [destination_cidr_block, gateway_id]
 #}
-  
+#}
+
 
 
 

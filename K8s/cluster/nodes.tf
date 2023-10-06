@@ -3,7 +3,7 @@
 data "terraform_remote_state" "network" {
   backend = "local"
   config = {
-    path = "../vpc-with-functions/terraform.tfstate"
+    path = "../Vpc-series/terraform.tfstate"
   }
 }
 
