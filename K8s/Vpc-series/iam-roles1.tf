@@ -10,7 +10,9 @@ locals {
     "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   ]
+  
 }
+
 
 # 1. Create IAM roles for node groups
 resource "aws_iam_role" "nodes" {
