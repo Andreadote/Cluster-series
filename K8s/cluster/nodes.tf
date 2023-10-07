@@ -22,6 +22,7 @@ data "terraform_remote_state" "network" {
 # Create node group in the create vpc using created node role
 # ( this what create your node group{ all your nodes} )
 
+
 resource "aws_eks_node_group" "private-nodes" {
   cluster_name    = aws_eks_cluster.demo.name
   node_group_name = "private-nodes"
