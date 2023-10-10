@@ -26,7 +26,8 @@ data "terraform_remote_state" "network" {
 resource "aws_eks_node_group" "private-nodes" {
   cluster_name    = aws_eks_cluster.demo.name
   node_group_name = "private-nodes"
-  node_role_arn   = data.terraform_remote_state.network.outputs.demo_role
+  node_role_arn   = data.terraform_remote_state.network.outputs.node_role
+  #node_role_arn = "arn:aws:iam::109753259968:role/eks-node-group-nodes"
 
   subnet_ids = [
     data.terraform_remote_state.network.outputs.private[0], data.terraform_remote_state.network.outputs.private[1]
@@ -51,7 +52,7 @@ resource "aws_eks_node_group" "private-nodes" {
   # This tags are important if we are going to use an auto-scaler
   tags = {
     "k8s.io/cluster-autoscaler/demo"    = "owend"
-    "k8s.io/cluster-autoscaler/enabled" = "true"
+    "k8s.io/cluster-autoscaler/enabled" = true
 
   }
 }

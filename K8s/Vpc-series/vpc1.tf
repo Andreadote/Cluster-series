@@ -4,8 +4,9 @@ data "external" "vpc_name" {
 
 # Create VPC
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-
+  cidr_block           = "10.0.0.0/16"
+  instance_tenancy     = "default"
+  enable_dns_hostnames = true
   tags = {
     Name = data.external.vpc_name.result.name
   }
@@ -23,8 +24,8 @@ resource "aws_internet_gateway" "igw" {
 
 #3 Create EIP for NAT Gateway
 resource "aws_eip" "nat" {
-  vpc   = true
-  count = length(var.public_cidr)
+  # vpc   = true
+  #count = length(var.public_cidr)
 
   tags = {
     Name = "nat"
@@ -35,9 +36,9 @@ resource "aws_eip" "nat" {
 
 # 4 Create NAT Gateway
 resource "aws_nat_gateway" "nat" {
-  count         = length(var.public_cidr)
-  allocation_id = aws_eip.nat[count.index].id # Use the EIP allocation ID corresponding to this NAT Gateway
-  subnet_id     = aws_subnet.public[count.index].id
+  #count         = length(var.public_cidr)
+  allocation_id = aws_eip.nat.id # Use the EIP allocation ID corresponding to this NAT Gateway
+  subnet_id     = aws_subnet.public[0].id
 
   tags = {
     Name = "nat"
@@ -70,12 +71,12 @@ resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = element(var.public_cidr, count.index)
   availability_zone       = element(var.availability_zone, count.index)
-  map_public_ip_on_launch = false
+  map_public_ip_on_launch = true
 
   tags = {
-    "Name"                       = "public"
-    "kubernetes.io/role/elb"     = "1"
-    "kubernetes.io/cluster/demo" = "owned"
+    "Name"                            = "public"
+    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/demo"      = "owned"
   }
 }
 
@@ -106,16 +107,34 @@ resource "aws_route" "public_internet_gateway" {
   route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.igw.id
-
+  depends_on             = [aws_route_table.public]
 
 }
-## 10 Create private route using NAT Gateway
+#10 Create private route using NAT Gateway
 #resource "aws_route" "private_nat_gateway" {
 #count = length(var.private_cidr)
 
 #route_table_id         = aws_route_table.private.id
 #destination_cidr_block = "0.0.0.0/0"
 #gateway_id             = aws_nat_gateway.nat[count.index].id  # Use aws_nat_gateway instead of aws_internet_gateway
+
+#depends_on = [ aws_route_table.public ]
+#}
+
+# Create a private route using NAT Gateway
+
+resource "aws_route" "private_nat_gateway" {
+  #count = length(var.private_cidr)
+
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  #nat_gateway_id         = aws_nat_gateway.nat[count.index].id
+  nat_gateway_id = aws_nat_gateway.nat.id
+
+  depends_on = [aws_route_table.private]
+}
+
+
 
 # Only create the route if it doesn't already exist
 #lifecycle {
@@ -124,27 +143,27 @@ resource "aws_route" "public_internet_gateway" {
 #}
 
 
-
-
+#11. Create private route association
 resource "aws_route_table_association" "private" {
   count = length(var.private_cidr)
 
-  subnet_id      = aws_subnet.private[count.index].id
-  route_table_id = aws_route_table.private.id # Accessing the id attribute of the private route table
+  subnet_id      = element(aws_subnet.private[*].id, count.index)
+  route_table_id = aws_route_table.private.id
 
-  #depends_on = [aws_route.private_nat_gateway, aws_subnet.private]
+  depends_on = [aws_route.private_nat_gateway, aws_subnet.private]
 
 }
 
 
+
+
+#12. Create public route association
 resource "aws_route_table_association" "public" {
   count = length(var.public_cidr)
 
-  subnet_id      = aws_subnet.public[count.index].id
-  route_table_id = element(aws_route_table.public.*.id, count.index)
+  subnet_id      = element(aws_subnet.public[*].id, count.index)
+  route_table_id = aws_route_table.public.id
 
-  depends_on = [aws_route.public_internet_gateway, aws_subnet.public]
+  depends_on = [aws_route_table_association.private, aws_subnet.public]
+
 }
-
-
- 

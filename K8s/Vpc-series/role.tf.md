@@ -14,7 +14,20 @@ locals {
 
 resource "aws_iam_role" "nodes" {
   name               = "eks-node-group-nodes"
-  assume_role_policy = data.aws_iam_policy_document.nodes.json
+  assume_role_policy = <<POLICY
+{
+  "Version" : "2012-10-17",
+  "Statement" : [
+    {
+      "Effect" : "Allow",
+      "Principal" : {
+        "Service" : "ec2.amazonaws.com"
+      },
+      "Action" : "sts:AssumeRole"
+    }
+  ]
+}
+POLICY
 }
 
 resource "aws_iam_role_policy_attachment" "nodes-AmazonEKSWorkerNodePolicy" {
@@ -25,7 +38,20 @@ resource "aws_iam_role_policy_attachment" "nodes-AmazonEKSWorkerNodePolicy" {
 
 resource "aws_iam_role" "demo" {
   name               = "eks-cluster-demo"
-  assume_role_policy = data.aws_iam_policy_document.eks_assume_role.json
+  assume_role_policy = <<POLICY
+{
+  "Version" : "2012-10-17",
+  "Statement" : [
+    {
+      "Effect" : "Allow",
+      "Principal" : {
+        "Service" : "eks.amazonaws.com"
+      },
+      "Action" : "sts:AssumeRole"
+    }
+  ]
+}
+POLICY
 }
 
 resource "aws_iam_role_policy_attachment" "demo-AmazonEKSClusterPolicy" {
