@@ -98,4 +98,4 @@ role       = aws_iam_role.nodes.name
 }
 
 ======================================================================
-- The credentials used to provision the EKS are the authorized credentials to modify or edit the configMap. aws-auth cm
+- The credentials used to provision the EKS are the authorized credentials to modify or edit the configMap. aws-auth cm ---
