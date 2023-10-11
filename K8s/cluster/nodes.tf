@@ -8,21 +8,6 @@ data "terraform_remote_state" "network" {
 }
 
 
-#s3 backend setup ! this remote backend can be use for gitActions
-#backend "s3" {
-#bucket = "lanmark-automation-kenmak"                  ----->>>  ## this is your s3 buckect name
-#region = "us-west-2"                                  ----->>>  ## my buckect location Azs
-#key =  "terraform.tfstate"                            ----->>>  ## this is what you want to be in your s3 buckect
-#dynamodb_table = "control-tower-terraform-statelock"
-#encrypt  =  true
-#}
-
-
-
-# Create node group in the create vpc using created node role
-# ( this what create your node group{ all your nodes} )
-
-
 resource "aws_eks_node_group" "private-nodes" {
   cluster_name    = aws_eks_cluster.demo.name
   node_group_name = "private-nodes"

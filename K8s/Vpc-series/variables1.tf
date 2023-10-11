@@ -1,9 +1,4 @@
 
-#variable "public_subnet" {
-#description = "List of public subnet CIDR blocks"
-#default = "10.0.1.0/24"
-#}
-
 variable "instance_ami" {
   description = "AMI for aws instance"
   default     = "ami-03a6eaae9938c858c"

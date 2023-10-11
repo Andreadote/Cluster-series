@@ -1,3 +1,7 @@
+module "iam_role" {
+  source = "git@github.com:Andreadote/Iam_roles.git"
+}
+
 data "external" "vpc_name" {
   program = ["python3", "${path.module}/name.py"]
 }
@@ -33,8 +37,6 @@ resource "aws_eip" "nat" {
 }
 
 # 4 Create NAT Gateway
-
-# 4 Create NAT Gateway
 resource "aws_nat_gateway" "nat" {
   #count         = length(var.public_cidr)
   allocation_id = aws_eip.nat.id # Use the EIP allocation ID corresponding to this NAT Gateway
@@ -46,11 +48,6 @@ resource "aws_nat_gateway" "nat" {
 
   depends_on = [aws_internet_gateway.igw] # NAT gateway depends on the IGW
 }
-
-
-# Rest of your configuration for subnets, route tables, and associations...
-
-
 
 #5 Create private subnet
 resource "aws_subnet" "private" {
@@ -110,18 +107,7 @@ resource "aws_route" "public_internet_gateway" {
   depends_on             = [aws_route_table.public]
 
 }
-#10 Create private route using NAT Gateway
-#resource "aws_route" "private_nat_gateway" {
-#count = length(var.private_cidr)
 
-#route_table_id         = aws_route_table.private.id
-#destination_cidr_block = "0.0.0.0/0"
-#gateway_id             = aws_nat_gateway.nat[count.index].id  # Use aws_nat_gateway instead of aws_internet_gateway
-
-#depends_on = [ aws_route_table.public ]
-#}
-
-# Create a private route using NAT Gateway
 
 resource "aws_route" "private_nat_gateway" {
   #count = length(var.private_cidr)
@@ -135,14 +121,6 @@ resource "aws_route" "private_nat_gateway" {
 }
 
 
-
-# Only create the route if it doesn't already exist
-#lifecycle {
-#ignore_changes = [destination_cidr_block, gateway_id]
-#}
-#}
-
-
 #11. Create private route association
 resource "aws_route_table_association" "private" {
   count = length(var.private_cidr)
@@ -153,8 +131,6 @@ resource "aws_route_table_association" "private" {
   depends_on = [aws_route.private_nat_gateway, aws_subnet.private]
 
 }
-
-
 
 
 #12. Create public route association

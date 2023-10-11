@@ -10,3 +10,5 @@ package-*
 terraform.*
 terraform.tfstate
 terraform.tfstate.*
+key.asc
+terraform.sh.md
