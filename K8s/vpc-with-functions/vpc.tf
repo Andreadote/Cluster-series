@@ -1,6 +1,8 @@
-module "iam_role" {
+/*module "iam_role" {
   source = "git@github.com:Andreadote/Iam_roles.git"
 }
+*/
+
 
 data "external" "vpc_name" {
   program = ["python3", "${path.module}/name.py"]
@@ -48,6 +50,8 @@ resource "aws_nat_gateway" "nat" {
 
   depends_on = [aws_internet_gateway.igw] # NAT gateway depends on the IGW
 }
+
+
 
 #5 Create private subnet
 resource "aws_subnet" "private" {

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aws-cli
+  namespace: default
+spec:
+  serviceAccountName: aws-test
+  containers:
+  - name: aws-cli
+    image: amazon/aws-cli  # Corrected image name
+    command: [ "/bin/bash", "-c", "--" ]  # Specify the shell as the command
+    args: [ "while true; do sleep 30; done;" ]  # The shell command you want to run
+  tolerations:
+    - operator: Exists
+      effect: NoSchedule
