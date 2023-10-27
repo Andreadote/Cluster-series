@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: my-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Andreadote/helm-argo-test.git
+    targetRevision: main
+    path: helm-chart/demochart2/
+    helm: 
+      values: |
+        replicaCount: 10
+        service:
+          port: 8081
+          targetPort: 8081
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated: {}

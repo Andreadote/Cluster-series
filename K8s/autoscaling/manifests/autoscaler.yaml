@@ -114,7 +114,7 @@ spec:
     spec:
       serviceAccountName: cluster-autoscaler
       containers:
-        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.27.3 # make sure yur eks cluster and autoscaler is thesame.. very important
+        - image: registry.k8s.io/autoscaling/cluster-autoscaler:v1.27.3 # make sure ur eks cluster and autoscaler is thesame.. very important
           name: cluster-autoscaler
           resources:
             limits:
