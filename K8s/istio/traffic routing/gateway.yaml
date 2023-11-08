@@ -1,0 +1,117 @@
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs
+  labels:
+    app: nodejs
+spec:
+  selector:
+    app: nodejs
+  ports:
+  - name: http
+    port: 8080
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+# Deployment v1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-v1
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs
+  template:
+    metadata:
+      labels:
+        app: nodejs
+        version: v1
+    spec:
+      containers:
+      - name: nodejs
+        image: mylandmarktech/spring-boot-mongo:latest
+        ports:
+        - containerPort: 8080
+---
+# Deployment v2
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-v2
+  labels:
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs
+  template:
+    metadata:
+      labels:
+        app: nodejs
+        version: v2
+    spec:
+      containers:
+      - name: nodejs
+        image: mylandmarktech/maven-web-app
+        ports:
+        - containerPort: 8080
+---
+# Gateway
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: nodejs-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+# Virtual service
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: nodejs
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - nodejs-gateway
+  http:
+  - route:
+    - destination:
+        host: nodejs
+        subset: v1
+      weight: 90
+    - destination:
+        host: nodejs
+        subset: v2
+      weight: 10
+
+---
+# Destination rule
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: nodejs
+spec:
+  host: nodejs
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2

@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: helloworld
+  name: helloworld
+spec:
+  ports:
+  - name: 80-8080
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: helloworld
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: helloworld-v1
+  name: helloworld-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworld
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: helloworld
+        version: v1
+    spec:
+      containers:
+      - image: mylandmarktech/spring-boot-mongo:latest
+        name: spring-boot-mongo
+        resources: {}
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: helloworld-v2
+  name: helloworld-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helloworld
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: helloworld
+        version: v2
+    spec:
+      containers:
+      - image: mylandmarktech/maven-web-app
+        name: maven
+        resources: {}
+status: {}
+
+
+

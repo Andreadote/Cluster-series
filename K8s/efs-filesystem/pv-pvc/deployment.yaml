@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  efs-app
+  namespace: default
+  labels:
+    app:  efs-app1
+spec:
+  selector:
+    matchLabels:
+      app: efs-app1
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app:  efs-app1
+    spec:
+  containers:
+  - name: app
+    image: centos
+    command: ["/bin/sh"]
+    args: ["-c", "while true; do echo $(date -u) >> /data/out.txt; sleep 2; done"]
+    volumeMounts:
+    - name: persistent-storage
+      mountPath: /data1
+  volumes:
+    - name: persistent-storage
+       PersistentVolumeClaim:
+       claimName: efs-claim
