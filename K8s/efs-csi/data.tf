@@ -4,11 +4,11 @@ data "terraform_remote_state" "network" {
     path = "../vpc-with-functions/terraform.tfstate"
   }
 }
-  data "aws_eks_cluster" "this" {
+data "aws_eks_cluster" "this" {
   name = "demo"
 
-  }
-  
+}
+
 data "aws_eks_cluster_auth" "cluster" {
   name = data.aws_eks_cluster.this.name
 }
