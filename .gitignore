@@ -1,8 +1,8 @@
 .terraform
 terraform.log*
-.terraform.*
 package
 !terraform.tfvars
+!.terraform.lock
 Prod.*
 dev.*
 terraform_0.14.9_linux_amd64.zip
