@@ -12,7 +12,7 @@ resource "aws_efs_file_system" "stw_node_efs" {
   }
 }
 
-#efs mount targets
+#efs mount targets## default port for NFS- 2049
 resource "aws_efs_mount_target" "stw_node_efs_mt_0" {
   file_system_id  = aws_efs_file_system.stw_node_efs.id
   subnet_id       = data.terraform_remote_state.network.outputs.private[0]

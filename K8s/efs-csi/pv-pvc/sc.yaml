@@ -5,5 +5,5 @@ metadata:
   provisioner: efs.csi.aws.com
   parameters:
     provisioningMode: efs-ap
-    fileSystemId: fs-044677da728b9c02a  #update always
+    fileSystemId: fs-044677da728b9c02a  #update always ** get it from the output
     directoryPerms: "700"

@@ -8,6 +8,8 @@ variable "attach_efs_csi_policy" {
   default = true
 }
 
+
+# to pass multiple addons or 1
 variable "addons" {
   type = list(object({
     name    = string
