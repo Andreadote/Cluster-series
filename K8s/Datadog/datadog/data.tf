@@ -101,13 +101,17 @@ data "aws_iam_policy_document" "datadog_assume_role" {
                 "xray:BatchGetTraces",
                 "xray:GetTraceSummaries"
             ]
-            "Resource": "*"
+            
         }
 }
 
+
+
+
+
 data "aws_caller_identity" "current" {}
 
-data "aws_iam_policy_document" "datadog_assume_role" {
+data "aws_iam_policy_document" "datadog_assume_role2" {
   statement {
     sid    = "AllowDatadogAssumeRole"
     effect = "Allow"

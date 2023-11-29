@@ -1,3 +1,6 @@
+
+# monitor.tf 
+
 resource "datadog_monitor" "process_alert-example" {
   name               = "Process alert monitor"
   type               = "Process alert"
@@ -6,10 +9,10 @@ resource "datadog_monitor" "process_alert-example" {
   monitor_thresholds {
     critical_recovery       = 0.0
     critical                = 1.0
+
   }
 
   notify_no_data   = false
-
   renotify_interval = 60
 }
 
@@ -31,6 +34,9 @@ resource "datadog_monitor" "foo" {
   #silenced {
   # "*" = 0
   # }
+
+  tags = ["foo:bar", "baz"]
+
   }
 
 
@@ -50,7 +56,7 @@ resource "datadog_integration_aws" "sandbox" {
 }
 
 
-resource "datadog_monitor" "cpuMonitor1" {
+resource "datadog_monitor" "cpuMonitor" {
     #account_id = "411854276167"
   name                  = "cpu monitor ${aws_intance.base.id}"
   type                  = "metric alert"
@@ -64,7 +70,6 @@ resource "datadog_monitor" "cpuMonitor1" {
 
 
 resource "datadog_monitor" "cpuMonitor1" {
-    #account_id = "411854276167"
   name                  = "cpu monitor"
   type                  = "metric alert"
   message               = "CPU usage alert"
