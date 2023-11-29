@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: demo-deployment  # Add a name for your deployment
+  labels:
+    name: demo
+    app: demo
+spec:
+  selector:
+    matchLabels:
+      app: demo
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      containers:
+      - name: my-spring-app
+        image: mylandmarktech/springapp:latest
+        resources: {}
+status: {}
