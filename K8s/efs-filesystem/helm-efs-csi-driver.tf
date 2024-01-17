@@ -1,6 +1,6 @@
 # EFS file system
 locals {
-  efs_sg   = data.terraform_remote_state.network.outputs.efs_sg
+  efs_sg = data.terraform_remote_state.network.outputs.efs_sg
 }
 
 #efs file system
