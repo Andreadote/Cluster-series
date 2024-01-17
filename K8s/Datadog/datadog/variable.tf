@@ -5,7 +5,7 @@ variable "datadog_api_key" {
 
 variable "datadog_app_key" {
   type    = string
-  default = "36ad1e9082f757d746a272c994cc54ae62f3393b"
+  default = "db523f377d03ef8eb3a9d789868bbaaba409d63a"
 }
 
 variable "datadog_api_url" {
@@ -22,5 +22,5 @@ variable "application_name" {
 variable "datadog_site" {
   type        = string
   description = "Datadog Site Parameter"
-  default     = "app.datadoghq.com"
+  default     = "us5.datadoghq.com"
 }

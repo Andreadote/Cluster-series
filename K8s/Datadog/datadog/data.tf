@@ -102,9 +102,9 @@ data "aws_iam_policy_document" "datadog_assume_role" {
                 "xray:GetTraceSummaries"
             ]
             
+          
         }
 }
-
 
 
 
