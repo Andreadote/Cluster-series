@@ -12,10 +12,10 @@ resource "kubernetes_namespace" "istio_system" {
 
 # Istio base release
 resource "helm_release" "istio-base" {
-  repository = local.istio_charts_url
-  chart      = "base"
-  name       = "istio-base"
-  namespace  = kubernetes_namespace.istio_system.id
+  repository      = local.istio_charts_url
+  chart           = "base"
+  name            = "istio-base"
+  namespace       = kubernetes_namespace.istio_system.id
   cleanup_on_fail = true
   force_update    = false
 
